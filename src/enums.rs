@@ -14,11 +14,6 @@ impl fmt::Display for Board {
                     Some(piece) => piece.to_string(),
                     None => ".".to_string(),
                 };
-                // match piece {
-                //     Some(piece) => piece,
-                //     None => None(Piece),
-                // }
-                // write!(f, "{}", piece)?;
                 write!(f, "{} ", output_string)?;
             }
             writeln!(f)?;
@@ -55,12 +50,6 @@ impl fmt::Display for Piece {
             Piece::King(color) => ('K', color),
         };
 
-        // println!("{}", "Too small".red());
-        // println!("{}", "R".white().on_truecolor(128, 128, 128));
-        // println!("{}", "R".black().on_truecolor(192, 192, 192));
-        // let my_string = String::new("nice");
-        // my_string.redgc
-
         write!(
             f,
             "{}",
@@ -69,32 +58,5 @@ impl fmt::Display for Piece {
                 Color::Black => "red",
             })
         )
-
-        // match color {
-        //     Color::White => {
-        //         write!(f, "{}", format!("{}", letter.to_string().white()))
-        //     }
-        //     Color::Black => {
-        //         write!(f, "{}", format!("{}", letter.to_string().black()))
-        //     }
-        // }
-
-        // write!(
-        //     f,
-        //     "{}",
-        //     format!("{}", letter).to_string().color(match color {
-        //         Color::White => "green",
-        //         Color::Black => "red",
-        //     })
-        // )
     }
 }
-
-// impl fmt::Display for Option<Piece> {
-//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-//         match self {
-//             Some(piece) => write!(f, "{}", piece),
-//             None => write!(f, "."),
-//         }
-//     }
-// }
