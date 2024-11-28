@@ -80,19 +80,28 @@ Given a game state 2-d array where the player to play is in check, how can we de
 // Isn't that what the Some() and None() Result type is for? Seems redundant
 // enum Tile {
 //     Empty,
-
+//     Piece,
 // }
 
-enum Piece {
-    Root(Color),
-    Bishop(Color),
-    King(Color),
-}
+// use enums::MyColor;
+mod enums;
+use enums::{Color, Piece};
 
-enum Color {
-    White,
-    Black,
-}
+// use enums::MyColor;
+
+// mod enums::*;
+// use enums::MyColor;
+
+// enum Piece {
+//     Root(Color),
+//     Bishop(Color),
+//     King(Color),
+// }
+
+// enum Color {
+//     White,
+//     Black,
+// }
 
 // struct Piece {
 //     type: String,
@@ -102,4 +111,11 @@ enum Color {
 
 fn main() {
     println!("Hello, world!");
+
+    // let piece = Piece(Root(Color::White));
+    let piece = Piece::Rook(Color::White);
+    println!("{:#?}", piece);
+
+    // let a = Color::White;
+    // println!("{:#?}", a);
 }
