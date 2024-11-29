@@ -33,7 +33,23 @@ pub enum Piece {
     King(Color),
 }
 
-#[derive(Debug)]
+impl Piece {
+    pub fn color(&self) -> &Color {
+        match self {
+            Piece::Pawn(color) => color,
+            Piece::Knight(color) => color,
+            Piece::Bishop(color) => color,
+            Piece::Rook(color) => color,
+            Piece::Queen(color) => color,
+            Piece::King(color) => color,
+        }
+    }
+    // fn has_same_color(&self, other: &Piece) -> bool {
+    //     self.color()
+    // }
+}
+
+#[derive(Debug, PartialEq)]
 pub enum Color {
     White,
     Black,
@@ -59,4 +75,10 @@ impl fmt::Display for Piece {
             })
         )
     }
+}
+
+#[derive(Debug)]
+pub struct Position {
+    pub row: usize,
+    pub col: usize,
 }
