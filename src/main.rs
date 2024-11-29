@@ -296,7 +296,48 @@ fn valid_moves_of_piece(board: &Board, row: usize, col: usize) -> Vec<Position> 
 
                 result
             }
-            Piece::Rook(color) => result,
+            Piece::Rook(color) => {
+                // let move_offsets = [1, 2, 3, 4, 5, 6, 7];
+
+                // for i in 1..4 {
+                //     for move_offset in move_offsets.iter() {
+                //         let mut target_row = (row as i32) + move_offset;
+                //         let mut target_col = (col as i32) + move_offset;
+                //         if i >= 2 {
+                //             target_col = target_col - move_offset;
+                //             target_row = target_row * -1; // + + - -
+                //         }
+                //         if i % 2 != 0 {
+                //             target_col = target_col * -1; // + - + -
+                //         }
+                //         if target_row < 0 || target_row > 7 || target_col < 0 || target_col > 7 {
+                //             continue;
+                //         }
+                //         let target_row = target_row as usize;
+                //         let target_col = target_col as usize;
+                //         let target_piece = &board.pieces[target_row][target_col];
+                //         match target_piece {
+                //             None => {
+                //                 result.push(Position {
+                //                     row: target_row,
+                //                     col: target_col,
+                //                 });
+                //             }
+                //             Some(target_piece) => {
+                //                 if color != target_piece.color() {
+                //                     result.push(Position {
+                //                         row: target_row,
+                //                         col: target_col,
+                //                     });
+                //                 }
+                //                 break;
+                //             }
+                //         }
+                //     }
+                // }
+
+                result
+            }
             Piece::Queen(color) => result,
             Piece::King(color) => result,
         },
