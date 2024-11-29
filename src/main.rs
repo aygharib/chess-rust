@@ -152,7 +152,7 @@ fn valid_moves_of_piece(board: &Board, row: usize, col: usize) -> Vec<Position> 
         None => result,
         Some(piece) => match piece {
             Piece::Pawn(color) => {
-                let mut vertical_move_offsets: [[i32; 2]; 2] = [[1, 0], [2, 0]];
+                let mut vertical_move_offsets = [[1, 0], [2, 0]];
                 if *color == Color::Black {
                     for offset in &mut vertical_move_offsets {
                         offset[0] = offset[0] * -1;
@@ -161,8 +161,13 @@ fn valid_moves_of_piece(board: &Board, row: usize, col: usize) -> Vec<Position> 
                 for vertical_move_offset in vertical_move_offsets.iter() {
                     let target_row = (row as i32) + vertical_move_offset[0];
                     let target_col = (col as i32) + vertical_move_offset[1];
-                    let target_row = target_row.clamp(0, 7) as usize;
-                    let target_col = target_col.clamp(0, 7) as usize;
+                    if target_row < 0 || target_row > 7 || target_col < 0 || target_col > 7 {
+                        continue;
+                    }
+                    let target_row = target_row as usize;
+                    let target_col = target_col as usize;
+                    // let target_row = target_row.clamp(0, 7) as usize;
+                    // let target_col = target_col.clamp(0, 7) as usize;
 
                     let target_piece = &board.pieces[target_row][target_col];
                     match target_piece {
@@ -185,6 +190,9 @@ fn valid_moves_of_piece(board: &Board, row: usize, col: usize) -> Vec<Position> 
                 for diagonal_move_offset in diagonal_move_offsets.iter() {
                     let target_row = (row as i32) + diagonal_move_offset[0];
                     let target_col = (col as i32) + diagonal_move_offset[1];
+                    if target_row < 0 || target_row > 7 || target_col < 0 || target_col > 7 {
+                        continue;
+                    }
                     let target_row = target_row as usize;
                     let target_col = target_col as usize;
                     let target_piece = &board.pieces[target_row][target_col];
@@ -203,8 +211,91 @@ fn valid_moves_of_piece(board: &Board, row: usize, col: usize) -> Vec<Position> 
 
                 result
             }
-            Piece::Knight(color) => result,
-            Piece::Bishop(color) => result,
+            // +x is down
+            // -x is up
+            // +y is right
+            // -y is left
+            Piece::Knight(color) => {
+                let move_offsets = [
+                    [-2, 1],
+                    [-2, -1],
+                    [-1, 2],
+                    [1, 2],
+                    [2, 1],
+                    [2, -1],
+                    [-1, -2],
+                    [1, -2],
+                ];
+                for move_offset in move_offsets.iter() {
+                    let target_row = (row as i32) + move_offset[0];
+                    let target_col = (col as i32) + move_offset[1];
+                    if target_row < 0 || target_row > 7 || target_col < 0 || target_col > 7 {
+                        continue;
+                    }
+                    let target_row = target_row as usize;
+                    let target_col = target_col as usize;
+                    let target_piece = &board.pieces[target_row][target_col];
+                    match target_piece {
+                        None => {
+                            result.push(Position {
+                                row: target_row,
+                                col: target_col,
+                            });
+                        }
+                        Some(target_piece) => {
+                            if color != target_piece.color() {
+                                result.push(Position {
+                                    row: target_row,
+                                    col: target_col,
+                                });
+                            }
+                        }
+                    }
+                }
+
+                result
+            }
+            Piece::Bishop(color) => {
+                let move_offsets = [1, 2, 3, 4, 5, 6, 7];
+
+                for i in 1..4 {
+                    for move_offset in move_offsets.iter() {
+                        let mut target_row = (row as i32) + move_offset;
+                        let mut target_col = (col as i32) + move_offset;
+                        if i >= 2 {
+                            target_row = target_row * -1; // + + - -
+                        }
+                        if i % 2 != 0 {
+                            target_col = target_col * -1; // + - + -
+                        }
+                        if target_row < 0 || target_row > 7 || target_col < 0 || target_col > 7 {
+                            continue;
+                        }
+                        let target_row = target_row as usize;
+                        let target_col = target_col as usize;
+                        let target_piece = &board.pieces[target_row][target_col];
+                        match target_piece {
+                            None => {
+                                result.push(Position {
+                                    row: target_row,
+                                    col: target_col,
+                                });
+                            }
+                            Some(target_piece) => {
+                                if color != target_piece.color() {
+                                    result.push(Position {
+                                        row: target_row,
+                                        col: target_col,
+                                    });
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                result
+            }
             Piece::Rook(color) => result,
             Piece::Queen(color) => result,
             Piece::King(color) => result,
