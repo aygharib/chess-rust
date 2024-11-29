@@ -85,7 +85,16 @@ fn main() {
             ],
             [None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None],
-            [None, None, None, None, None, None, None, None],
+            [
+                Some(Piece::Pawn(Color::White)),
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            ],
             [
                 Some(Piece::Pawn(Color::Black)),
                 Some(Piece::Pawn(Color::Black)),
@@ -121,6 +130,13 @@ fn main() {
         println!("{:#?}", e);
     }
 
+    let result = valid_moves_of_piece(&board, 6, 1);
+    println!("Valid moves for Pawn in Row: {}, Col: {}:", 6, 1);
+    println!("size of result: {}", result.len());
+    for e in result.iter() {
+        println!("{:#?}", e);
+    }
+
     // let piece = Piece::Rook(Color::White);
     // println!("{}", piece);
     // let piece = Piece::Rook(Color::Black);
@@ -136,10 +152,18 @@ fn valid_moves_of_piece(board: &Board, row: usize, col: usize) -> Vec<Position> 
         None => result,
         Some(piece) => match piece {
             Piece::Pawn(color) => {
-                let vertical_move_offsets = [[1, 0], [2, 0]];
+                let mut vertical_move_offsets: [[i32; 2]; 2] = [[1, 0], [2, 0]];
+                if *color == Color::Black {
+                    for offset in &mut vertical_move_offsets {
+                        offset[0] = offset[0] * -1;
+                    }
+                }
                 for vertical_move_offset in vertical_move_offsets.iter() {
-                    let target_row = row + vertical_move_offset[0];
-                    let target_col = col + vertical_move_offset[1];
+                    let target_row = (row as i32) + vertical_move_offset[0];
+                    let target_col = (col as i32) + vertical_move_offset[1];
+                    let target_row = target_row.clamp(0, 7) as usize;
+                    let target_col = target_col.clamp(0, 7) as usize;
+
                     let target_piece = &board.pieces[target_row][target_col];
                     match target_piece {
                         None => {
@@ -152,10 +176,13 @@ fn valid_moves_of_piece(board: &Board, row: usize, col: usize) -> Vec<Position> 
                     }
                 }
 
-                let diagonal_move_offsets = [[1, -1], [1, 1]];
+                let mut diagonal_move_offsets = [[1, -1], [1, 1]];
+                if *color == Color::Black {
+                    for offset in &mut diagonal_move_offsets {
+                        offset[0] = offset[0] * -1;
+                    }
+                }
                 for diagonal_move_offset in diagonal_move_offsets.iter() {
-                    // let target_row = row.saturating_add(diagonal_move_offset[0] as usize);
-                    // let target_col = col.saturating_add(diagonal_move_offset[1] as usize)
                     let target_row = (row as i32) + diagonal_move_offset[0];
                     let target_col = (col as i32) + diagonal_move_offset[1];
                     let target_row = target_row as usize;
@@ -175,19 +202,6 @@ fn valid_moves_of_piece(board: &Board, row: usize, col: usize) -> Vec<Position> 
                 }
 
                 result
-
-                // loop {
-                //     let new_col = col + forward_offset;
-                //     let new_piece = &board.pieces[row][new_col];
-
-                //     match new_piece {
-                //         None => break,
-                //         Some(_) => {
-                //             v.push(Position { row, col: new_col });
-                //             forward_offset += 1;
-                //         }
-                //     }
-                // }
             }
             Piece::Knight(color) => result,
             Piece::Bishop(color) => result,
